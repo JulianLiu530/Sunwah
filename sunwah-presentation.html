@@ -186,24 +186,30 @@ body {
 /* S3 — TRUST VACUUM */
 #s3 {
   background: var(--obsidian);
-  display: grid; grid-template-columns: 1fr 1fr;
-  align-items: center; gap: 60px;
+  display: flex; flex-direction: column; justify-content: center;
+  position: relative; overflow: hidden;
 }
-#s3 .left { display: flex; flex-direction: column; justify-content: center; }
-.factory-silhouette {
-  width: 100%; height: 400px; position: relative; overflow: hidden;
-  opacity: 0.15;
+#s3 .s3-bg {
+  position: absolute; inset: 0;
+  background-image: url('https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=1920&q=90');
+  background-size: cover; background-position: center;
+  filter: grayscale(100%) contrast(1.4) brightness(0.6);
+  mix-blend-mode: luminosity;
 }
-.factory-silhouette::before {
-  content: '';
-  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-  width: 80%; height: 100%;
-  background:
-    linear-gradient(to top, #555 0%, transparent 40%) 20% 100% / 60px 200px no-repeat,
-    linear-gradient(to top, #555 0%, transparent 50%) 40% 100% / 80px 280px no-repeat,
-    linear-gradient(to top, #555 0%, transparent 45%) 60% 100% / 50px 240px no-repeat,
-    linear-gradient(to top, #555 0%, transparent 35%) 75% 100% / 70px 180px no-repeat,
-    linear-gradient(to top, #444 0%, transparent 20%) 0% 100% / 100% 60px no-repeat;
+#s3 .s3-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(5,5,5,1.0) 0%,
+    rgba(5,5,5,0.97) 40%,
+    rgba(5,5,5,0.6) 70%,
+    rgba(5,5,5,0.15) 100%
+  );
+}
+#s3 .left {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column; justify-content: center;
+  max-width: 55%;
 }
 
 /* S4 — COMPARISON */
@@ -279,11 +285,15 @@ body {
 
 <!-- SLIDE 1 -->
 <div class="slide active" id="s1" data-notes="Open by establishing gravitas. This is not a student project — it is a fully-costed, legally-audited business proposal for one of Vietnam's most established conglomerates. Let the visual do the work for the first 10 seconds. Do not speak until the room has read the title.">
-  <div class="eyebrow">MiM Capstone 2025–26 &nbsp;|&nbsp; Team 11</div>
-  <h1>SUNWAH<br>FOUNDERS'<br>HOUSE</h1>
-  <div class="red-line"></div>
-  <p class="subtitle">Vietnam's Sovereign Infrastructure for Industrial Catalysts</p>
-  <button class="cta-btn" onclick="nextSlide()">Enter The Presentation &nbsp;→</button>
+  <div style="position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=1920&q=90');background-size:cover;background-position:center;z-index:0;"></div>
+  <div style="position:absolute;inset:0;background:linear-gradient(160deg,rgba(5,5,5,0.15) 0%,rgba(10,15,30,0.45) 40%,rgba(10,15,30,0.88) 75%,rgba(5,5,5,0.97) 100%);z-index:1;"></div>
+  <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;text-align:center;">
+    <div class="eyebrow">MiM Capstone 2025–26 &nbsp;|&nbsp; Team 11</div>
+    <h1>SUNWAH<br>FOUNDERS'<br>HOUSE</h1>
+    <div class="red-line"></div>
+    <p class="subtitle">Vietnam's Sovereign Infrastructure for Industrial Catalysts</p>
+    <button class="cta-btn" onclick="nextSlide()">Enter The Presentation &nbsp;→</button>
+  </div>
 </div>
 
 <!-- SLIDE 2 -->
@@ -296,6 +306,8 @@ body {
 
 <!-- SLIDE 3 -->
 <div class="slide" id="s3" data-notes="The 14-month stat is your hook. If a panel member challenges it, note it is derived from JETRO and EuroCham Vietnam FDI entry surveys. The point is not the exact number — it is the magnitude of the gap versus the 6-month global benchmark.">
+  <div class="s3-bg"></div>
+  <div class="s3-overlay"></div>
   <div class="left">
     <div class="gold-label">The Trust Vacuum</div>
     <h2 class="action-title">China+1 Is Accelerating.<br>Vietnam's Trust Infrastructure <span class="hl">Is Not.</span></h2>
@@ -305,7 +317,6 @@ body {
       <li>No institutional platform exists to bridge the policy and social gap.</li>
     </ul>
   </div>
-  <div class="factory-silhouette"></div>
 </div>
 
 <!-- SLIDE 4 -->
@@ -346,13 +357,17 @@ body {
 
 <!-- SLIDE 6 -->
 <div class="slide" id="s6" data-notes="Read the manifesto quote aloud, slowly. Then say: 'The dining room is the Trojan Horse. The real product is risk mitigation and deal velocity.' This reframe is the intellectual core of the entire proposal — everything else is execution detail.">
-  <div class="gold-label">The Manifesto</div>
-  <blockquote>"It is not a restaurant. It is a standing infrastructure for those who shape Southeast Asia's next industrial chapter."</blockquote>
-  <div class="guilloche" style="width:300px; margin: 0 auto 40px;"></div>
-  <div class="pillars">
-    <div class="pillar">Privacy</div>
-    <div class="pillar">Trust</div>
-    <div class="pillar">Capital</div>
+  <div style="position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1610375461246-83df859d849d?w=1920&q=90');background-size:cover;background-position:center;z-index:0;filter:brightness(0.3);"></div>
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(5,5,5,0.2) 0%,rgba(5,5,5,0.88) 100%);z-index:1;"></div>
+  <div style="position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;text-align:center;width:100%;">
+    <div class="gold-label">The Manifesto</div>
+    <blockquote>"It is not a restaurant. It is a standing infrastructure for those who shape Southeast Asia's next industrial chapter."</blockquote>
+    <div class="guilloche" style="width:300px; margin: 0 auto 40px;"></div>
+    <div class="pillars">
+      <div class="pillar">Privacy</div>
+      <div class="pillar">Trust</div>
+      <div class="pillar">Capital</div>
+    </div>
   </div>
 </div>
 
@@ -413,11 +428,14 @@ body {
         <li>Dual-Origin Harmony: Cantonese technique × premium Vietnamese ingredients.</li>
       </ul>
     </div>
-    <div style="background:linear-gradient(145deg,#1a0a0a,#0a0a0a);border:1px solid rgba(201,168,76,0.2);padding:48px 32px;text-align:center;">
-      <div style="width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,0.3),rgba(139,26,26,0.2));margin:0 auto 24px;border:1px solid rgba(201,168,76,0.4);display:flex;align-items:center;justify-content:center;font-size:32px;">🍽</div>
-      <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:1.1rem;color:var(--ivory-warm);line-height:1.6;">"The ingredient is the moat.<br>No competitor can replicate<br>what 50 years of relationships<br>can source."</div>
-      <div class="guilloche" style="margin-top:24px;"></div>
-      <div style="font-size:9px;letter-spacing:0.3em;color:var(--gold);text-transform:uppercase;">Sunwah Global Supply Chain</div>
+    <div style="position:relative;overflow:hidden;border:1px solid rgba(201,168,76,0.3);height:340px;">
+      <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=1200&q=90" alt="Fine dining" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.7) saturate(0.85);">
+      <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 50%,rgba(0,0,0,0.92) 100%);"></div>
+      <div style="position:absolute;bottom:0;left:0;right:0;padding:24px 28px;">
+        <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:1rem;color:var(--ivory-warm);line-height:1.6;">"The ingredient is the moat.<br>No competitor can replicate what 50 years of relationships can source."</div>
+        <div class="guilloche" style="margin-top:16px;"></div>
+        <div style="font-size:9px;letter-spacing:0.3em;color:var(--gold);text-transform:uppercase;">Sunwah Global Supply Chain</div>
+      </div>
     </div>
   </div>
 </div>
@@ -440,7 +458,7 @@ body {
 <div class="slide divider-slide" id="s12" data-notes="Shift in register. We are now speaking to the CFO in the room, not the CEO. Everything from here is numbers. The gold background is deliberate — it signals that we are now in the domain of capital, not culture.">
   <div style="position:absolute;inset:0;background:linear-gradient(135deg,#8B6914,#C9A84C,#FFD700,#C9A84C,#8B6914);"></div>
   <div style="position:relative;z-index:1;">
-    <div class="module-label" style="color:rgba(10,10,10,0.5);">Module 04 — The Asset</div>
+    <div class="module-label" style="color:rgba(10,10,10,0.75);">Module 04 — The Asset</div>
     <div class="divider-giant" style="color:var(--obsidian);">Where Capital<br>Compounds</div>
   </div>
 </div>
