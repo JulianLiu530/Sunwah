@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sunwah Founders' House | Strategy Presentation</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --obsidian: #0A0A0A;
+  --obsidian-deep: #050505;
+  --red-deep: #8B1A1A;
+  --red-bright: #C41E3A;
+  --gold: #C9A84C;
+  --gold-leaf: #FFD700;
+  --gold-dark: #8B6914;
+  --ivory: #FAF6F0;
+  --ivory-warm: #EDE0C8;
+  --grey-muted: #3A3A3A;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--obsidian);
+  color: var(--ivory);
+  font-family: 'Montserrat', sans-serif;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+}
+/* PROGRESS BAR */
+#progress-bar {
+  position: fixed; top: 0; left: 0; height: 2px;
+  background: linear-gradient(90deg, var(--red-deep), var(--gold), var(--gold-leaf));
+  transition: width 0.4s ease; z-index: 1000;
+}
+/* SLIDE COUNTER */
+#slide-counter {
+  position: fixed; bottom: 28px; right: 36px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px; letter-spacing: 0.3em;
+  color: rgba(201,168,76,0.6); z-index: 1000;
+}
+/* NOTES TOGGLE */
+#notes-toggle {
+  position: fixed; bottom: 28px; left: 36px;
+  font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase;
+  color: rgba(201,168,76,0.4); cursor: pointer; z-index: 1000;
+  border: 1px solid rgba(201,168,76,0.2); padding: 6px 14px;
+  transition: all 0.3s;
+}
+#notes-toggle:hover { color: var(--gold); border-color: var(--gold); }
+/* SPEAKER NOTES PANEL */
+#notes-panel {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: rgba(5,5,5,0.97);
+  border-top: 1px solid rgba(201,168,76,0.3);
+  padding: 20px 60px; max-height: 160px;
+  transform: translateY(100%); transition: transform 0.4s ease;
+  z-index: 999; overflow-y: auto;
+}
+#notes-panel.visible { transform: translateY(0); }
+#notes-panel p {
+  font-size: 13px; line-height: 1.7;
+  color: rgba(250,246,240,0.75);
+  font-family: 'Montserrat', sans-serif; font-weight: 300;
+}
+#notes-label {
+  font-size: 9px; letter-spacing: 0.4em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 10px;
+}
+/* SLIDES CONTAINER */
+#slides-container {
+  width: 100vw; height: 100vh; position: relative; overflow: hidden;
+}
+.slide {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 80px 10%;
+  opacity: 0; transform: translateX(60px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  pointer-events: none;
+}
+.slide.active {
+  opacity: 1; transform: translateX(0); pointer-events: all;
+}
+.slide.exit {
+  opacity: 0; transform: translateX(-60px);
+}
+/* GOLD GUILLOCHE LINE */
+.guilloche {
+  height: 1px; width: 100%;
+  background: linear-gradient(90deg, transparent, var(--gold-dark), var(--gold), var(--gold-leaf), var(--gold), var(--gold-dark), transparent);
+  margin: 24px 0;
+}
+/* GOLD LABEL */
+.gold-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.5em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 20px;
+}
+/* ACTION TITLE */
+.action-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.2rem, 4vw, 3.8rem);
+  line-height: 1.1; font-weight: 700;
+  color: var(--ivory); margin-bottom: 36px;
+  letter-spacing: -0.02em;
+}
+.action-title .hl { color: var(--red-bright); }
+/* BULLETS */
+.bullets { list-style: none; }
+.bullets li {
+  font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+  line-height: 1.6; color: var(--ivory-warm);
+  margin-bottom: 18px; display: flex; align-items: flex-start;
+  font-weight: 300;
+}
+.bullets li::before {
+  content: "—"; color: var(--red-bright);
+  margin-right: 16px; flex-shrink: 0; font-weight: 700;
+}
+/* SECTION DIVIDER STYLES */
+.divider-slide {
+  align-items: flex-start; justify-content: center;
+}
+.module-label {
+  font-size: 10px; letter-spacing: 0.6em; text-transform: uppercase;
+  color: rgba(201,168,76,0.5); margin-bottom: 32px; font-weight: 600;
+}
+.divider-giant {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(3rem, 7vw, 7rem);
+  line-height: 1.0; font-weight: 700;
+  letter-spacing: -0.03em;
+}
+.divider-sub {
+  font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+  font-weight: 300; margin-top: 28px;
+  opacity: 0.6; font-style: italic;
+}
+
+/* ===== SLIDE-SPECIFIC STYLES ===== */
+
+/* S1 — TITLE */
+#s1 {
+  background: radial-gradient(ellipse at 70% 50%, rgba(139,26,26,0.25) 0%, var(--obsidian) 65%);
+  align-items: center; text-align: center;
+}
+#s1 .eyebrow {
+  font-size: 10px; letter-spacing: 0.5em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 28px; font-weight: 600;
+}
+#s1 h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.8rem, 6vw, 6rem);
+  font-weight: 700; letter-spacing: 0.08em;
+  color: var(--ivory); line-height: 1.0; margin-bottom: 20px;
+}
+#s1 .subtitle {
+  font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+  font-weight: 300; color: var(--ivory-warm);
+  letter-spacing: 0.05em; margin-bottom: 48px; opacity: 0.8;
+}
+#s1 .cta-btn {
+  display: inline-block; padding: 14px 40px;
+  border: 1px solid var(--gold); color: var(--gold);
+  font-size: 10px; letter-spacing: 0.4em; text-transform: uppercase;
+  cursor: pointer; background: transparent;
+  transition: all 0.4s; font-family: 'Montserrat', sans-serif;
+}
+#s1 .cta-btn:hover {
+  background: var(--gold); color: var(--obsidian);
+}
+#s1 .red-line {
+  width: 60px; height: 2px;
+  background: var(--red-bright); margin: 0 auto 20px;
+}
+
+/* S2 — DIVIDER */
+#s2 { background: #000; }
+#s2 .divider-giant { color: var(--gold); }
+
+/* S3 — TRUST VACUUM */
+#s3 {
+  background: var(--obsidian);
+  display: grid; grid-template-columns: 1fr 1fr;
+  align-items: center; gap: 60px;
+}
+#s3 .left { display: flex; flex-direction: column; justify-content: center; }
+.factory-silhouette {
+  width: 100%; height: 400px; position: relative; overflow: hidden;
+  opacity: 0.15;
+}
+.factory-silhouette::before {
+  content: '';
+  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 80%; height: 100%;
+  background:
+    linear-gradient(to top, #555 0%, transparent 40%) 20% 100% / 60px 200px no-repeat,
+    linear-gradient(to top, #555 0%, transparent 50%) 40% 100% / 80px 280px no-repeat,
+    linear-gradient(to top, #555 0%, transparent 45%) 60% 100% / 50px 240px no-repeat,
+    linear-gradient(to top, #555 0%, transparent 35%) 75% 100% / 70px 180px no-repeat,
+    linear-gradient(to top, #444 0%, transparent 20%) 0% 100% / 100% 60px no-repeat;
+}
+
+/* S4 — COMPARISON */
+#s4 { background: var(--obsidian); }
+.compare-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 8px;
+}
+.compare-col {
+  padding: 32px; border: 1px solid;
+}
+.compare-col.bad {
+  border-color: rgba(255,255,255,0.1);
+  opacity: 0.45;
+}
+.compare-col.good {
+  border-color: var(--gold);
+  background: rgba(201,168,76,0.04);
+}
+.compare-col h3 {
+  font-size: 11px; letter-spacing: 0.4em; text-transform: uppercase;
+  margin-bottom: 20px; font-weight: 700;
+}
+.compare-col.bad h3 { color: rgba(255,255,255,0.4); }
+.compare-col.good h3 { color: var(--gold); }
+.compare-col ul { list-style: none; }
+.compare-col ul li {
+  font-size: 0.9rem; line-height: 1.8; color: var(--ivory-warm);
+  font-weight: 300; padding-left: 16px; position: relative;
+}
+.compare-col.bad ul li::before { content: "✕ "; color: rgba(255,255,255,0.2); }
+.compare-col.good ul li::before { content: "✓ "; color: var(--gold); }
+
+/* S5 — DIVIDER RED */
+#s5 { background: var(--red-deep); }
+#s5 .divider-giant { color: var(--ivory); }
+#s5 .module-label { color: rgba(250,246,240,0.4); }
+#s5 .divider-sub { color: rgba(250,246,240,0.6); }
+
+/* S6 — MANIFESTO */
+#s6 {
+  background: var(--obsidian);
+  align-items: center; text-align: center;
+}
+#s6 blockquote {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.4rem, 2.8vw, 2.4rem);
+  font-style: italic; line-height: 1.5;
+  color: var(--ivory); max-width: 800px;
+  margin: 0 auto 48px;
+}
+.pillars {
+  display: flex; gap: 24px; justify-content: center; flex-wrap: wrap;
+}
+.pillar {
+  border: 1px solid var(--gold); padding: 14px 32px;
+  font-size: 11px; letter-spacing: 0.5em; text-transform: uppercase;
+  color: var(--gold); font-weight: 700;
+}
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+<div id="slide-counter">01 / 18</div>
+<div id="notes-toggle" onclick="toggleNotes()">[ N ] Speaker Notes</div>
+
+<div id="notes-panel">
+  <div id="notes-label">Speaker Notes</div>
+  <p id="notes-text"></p>
+</div>
+
+<div id="slides-container">
+
+<!-- SLIDE 1 -->
+<div class="slide active" id="s1" data-notes="Open by establishing gravitas. This is not a student project — it is a fully-costed, legally-audited business proposal for one of Vietnam's most established conglomerates. Let the visual do the work for the first 10 seconds. Do not speak until the room has read the title.">
+  <div class="eyebrow">MiM Capstone 2025–26 &nbsp;|&nbsp; Team 11</div>
+  <h1>SUNWAH<br>FOUNDERS'<br>HOUSE</h1>
+  <div class="red-line"></div>
+  <p class="subtitle">Vietnam's Sovereign Infrastructure for Industrial Catalysts</p>
+  <button class="cta-btn" onclick="nextSlide()">Enter The Presentation &nbsp;→</button>
+</div>
+
+<!-- SLIDE 2 -->
+<div class="slide divider-slide" id="s2" data-notes="Pause here. Let the room read the quote. The $100M framing is deliberate — it anchors the problem in financial terms before we introduce the solution. Do not explain the number yet. Let the tension build.">
+  <div class="module-label">Module 01 — The Situation</div>
+  <div class="divider-giant">The $100M<br>Problem</div>
+  <div class="guilloche" style="width:200px; margin-top:32px;"></div>
+  <p class="divider-sub">"在不确定性中，信任是最高昂的成本。"</p>
+</div>
+
+<!-- SLIDE 3 -->
+<div class="slide" id="s3" data-notes="The 14-month stat is your hook. If a panel member challenges it, note it is derived from JETRO and EuroCham Vietnam FDI entry surveys. The point is not the exact number — it is the magnitude of the gap versus the 6-month global benchmark.">
+  <div class="left">
+    <div class="gold-label">The Trust Vacuum</div>
+    <h2 class="action-title">China+1 Is Accelerating.<br>Vietnam's Trust Infrastructure <span class="hl">Is Not.</span></h2>
+    <ul class="bullets">
+      <li>300+ Chinese manufacturers entered Vietnam in 2023–2024 alone.</li>
+      <li>Average time-to-commitment: <strong>14 months</strong> vs. 6-month global benchmark.</li>
+      <li>No institutional platform exists to bridge the policy and social gap.</li>
+    </ul>
+  </div>
+  <div class="factory-silhouette"></div>
+</div>
+
+<!-- SLIDE 4 -->
+<div class="slide" id="s4" data-notes="This slide wins the room if delivered correctly. The left column is everything they already know. The right column is everything they didn't know they needed. Pause on 'Sovereignty' — it is the word that separates us from every competitor in this market.">
+  <div class="gold-label">The Gap</div>
+  <h2 class="action-title">Five-Star Hotels Sell Comfort.<br>CEOs Need <span class="hl">Sovereignty.</span></h2>
+  <div class="compare-grid">
+    <div class="compare-col bad">
+      <h3>5-Star Hotel</h3>
+      <ul>
+        <li>Public lobby — zero anonymity</li>
+        <li>Open corridors — signal exposure</li>
+        <li>No photography protocol</li>
+        <li>Generic concierge service</li>
+        <li>No deal facilitation infrastructure</li>
+      </ul>
+    </div>
+    <div class="compare-col good">
+      <h3>Sunwah Founders' House</h3>
+      <ul>
+        <li>Private elevator — zero lobby exposure</li>
+        <li>Faraday-shielded suites — passive compliance</li>
+        <li>Zero-photography protocol enforced</li>
+        <li>Protocol Facilitators — cultural translators</li>
+        <li>Deal origination infrastructure built-in</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 5 -->
+<div class="slide divider-slide" id="s5" data-notes="Section break — let it breathe. The Red Sanctuary is the internal brand identity. Never use this language in government-facing materials — externally, the venue is always the Sunwah Connection Center. This distinction is deliberate and legally protective.">
+  <div class="module-label">Module 02 — The Big Idea</div>
+  <div class="divider-giant">THE RED<br>SANCTUARY</div>
+  <div class="guilloche" style="width:200px; margin-top:32px; background: linear-gradient(90deg, transparent, rgba(250,246,240,0.3), rgba(250,246,240,0.6), rgba(250,246,240,0.3), transparent);"></div>
+  <p class="divider-sub">Not a restaurant. A sovereign infrastructure.</p>
+</div>
+
+<!-- SLIDE 6 -->
+<div class="slide" id="s6" data-notes="Read the manifesto quote aloud, slowly. Then say: 'The dining room is the Trojan Horse. The real product is risk mitigation and deal velocity.' This reframe is the intellectual core of the entire proposal — everything else is execution detail.">
+  <div class="gold-label">The Manifesto</div>
+  <blockquote>"It is not a restaurant. It is a standing infrastructure for those who shape Southeast Asia's next industrial chapter."</blockquote>
+  <div class="guilloche" style="width:300px; margin: 0 auto 40px;"></div>
+  <div class="pillars">
+    <div class="pillar">Privacy</div>
+    <div class="pillar">Trust</div>
+    <div class="pillar">Capital</div>
+  </div>
+</div>
+
+
+<!-- SLIDE 7 -->
+<div class="slide" id="s7" data-notes="The Maritime Meridian motif solves the political risk problem identified in our regulatory audit. By framing the club as a continuation of 400 years of bilateral trade — not a new Chinese enclave — we neutralize nationalist sensitivity before it arises. This is proactive political risk management, not decoration.">
+  <div style="position:absolute;inset:0;opacity:0.06;background-image:repeating-linear-gradient(0deg,transparent,transparent 40px,rgba(201,168,76,0.4) 40px,rgba(201,168,76,0.4) 41px),repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(201,168,76,0.4) 40px,rgba(201,168,76,0.4) 41px);pointer-events:none;"></div>
+  <div class="gold-label">Heritage Reimagined</div>
+  <h2 class="action-title">The Maritime Meridian:<br>Centuries of Commerce, <span class="hl">Reimagined.</span></h2>
+  <div class="guilloche"></div>
+  <p style="font-size:clamp(1rem,1.6vw,1.25rem);line-height:1.8;color:var(--ivory-warm);font-weight:300;max-width:680px;font-style:italic;">
+    "From the Pearl River Delta to the Mekong — Cantonese merchants and Vietnamese traders have shared these waters for 400 years. Sunwah Founders' House is their modern meeting room."
+  </p>
+</div>
+
+<!-- SLIDE 8 -->
+<div class="slide divider-slide" id="s8" data-notes="Transition slide. Use this moment to signal to the panel that what follows is operational detail — proof that this team has thought beyond the concept. The mechanical border signals precision engineering, not just vision.">
+  <div style="position:absolute;inset:24px;border:1px solid rgba(201,168,76,0.2);pointer-events:none;"></div>
+  <div style="position:absolute;inset:30px;border:1px solid rgba(201,168,76,0.08);pointer-events:none;"></div>
+  <div class="module-label">Module 03 — The Blueprint</div>
+  <div class="divider-giant" style="color:var(--ivory);">The Blueprint<br><span style="color:var(--gold);">of Discretion</span></div>
+</div>
+
+<!-- SLIDE 9 -->
+<div class="slide" id="s9" data-notes="Pre-empt the signal-jamming question. Active RF jamming is illegal in Vietnam under Decree 42/2017. We solved this with passive Faraday architecture — which is actually superior: invisible, permanent, and legally unimpeachable. Frame this as a feature, not a constraint.">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;width:100%;">
+    <div>
+      <div class="gold-label">Physical Privacy</div>
+      <h2 class="action-title">Sovereign Privacy,<br>Engineered Into <span class="hl">the Walls.</span></h2>
+      <ul class="bullets">
+        <li>Passive Faraday Cage embedded in all suite walls — no active jamming, fully compliant with Decree 42/2017.</li>
+        <li>Private elevator with direct penthouse access — zero lobby exposure for any partner.</li>
+        <li>Aerospace-grade acoustic panels + double vacuum-sealed doors throughout.</li>
+      </ul>
+    </div>
+    <div style="border:1px solid rgba(201,168,76,0.3);padding:32px;font-family:'Montserrat',sans-serif;">
+      <div style="font-size:9px;letter-spacing:0.4em;color:var(--gold);margin-bottom:20px;">WALL CROSS-SECTION — SCHEMATIC</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.4);padding:10px 16px;font-size:11px;color:var(--gold);">① Outer Drywall Layer</div>
+        <div style="background:rgba(196,30,58,0.15);border:1px solid rgba(196,30,58,0.4);padding:10px 16px;font-size:11px;color:#e87;margin-left:16px;">② Copper Mesh Faraday Layer</div>
+        <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);padding:10px 16px;font-size:11px;color:var(--ivory-warm);margin-left:32px;">③ Acoustic Foam Core (50mm)</div>
+        <div style="background:rgba(196,30,58,0.08);border:1px solid rgba(196,30,58,0.2);padding:10px 16px;font-size:11px;color:#e87;margin-left:16px;">④ Secondary Copper Mesh</div>
+        <div style="background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.4);padding:10px 16px;font-size:11px;color:var(--gold);">⑤ Inner Rosewood Finish</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 10 -->
+<div class="slide" id="s10" data-notes="The food is not the product — but it is the reason people show up. Sunwah's global supply chain creates an ingredient moat that no local competitor can replicate. The abalone dish is a symbol of that moat — it cannot be sourced by a new entrant without Sunwah's 50-year network.">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;width:100%;">
+    <div>
+      <div class="gold-label">The Signature</div>
+      <h2 class="action-title">Haute Cantonese Cuisine<br>as the <span class="hl">Language of Trust.</span></h2>
+      <ul class="bullets">
+        <li>Aged Pu-erh Braised South African Abalone — sourced via Sunwah's global supply chain.</li>
+        <li>Gold Leaf Har Gow — 24K edible gold, hand-crafted by HK-imported head chef.</li>
+        <li>Dual-Origin Harmony: Cantonese technique × premium Vietnamese ingredients.</li>
+      </ul>
+    </div>
+    <div style="background:linear-gradient(145deg,#1a0a0a,#0a0a0a);border:1px solid rgba(201,168,76,0.2);padding:48px 32px;text-align:center;">
+      <div style="width:80px;height:80px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,0.3),rgba(139,26,26,0.2));margin:0 auto 24px;border:1px solid rgba(201,168,76,0.4);display:flex;align-items:center;justify-content:center;font-size:32px;">🍽</div>
+      <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:1.1rem;color:var(--ivory-warm);line-height:1.6;">"The ingredient is the moat.<br>No competitor can replicate<br>what 50 years of relationships<br>can source."</div>
+      <div class="guilloche" style="margin-top:24px;"></div>
+      <div style="font-size:9px;letter-spacing:0.3em;color:var(--gold);text-transform:uppercase;">Sunwah Global Supply Chain</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 11 -->
+<div class="slide" id="s11" data-notes="This is the most underrated slide in the deck. The Protocol Facilitators solve a problem no five-star hotel has ever tried to solve: the cultural translation layer in a high-stakes Sino-Vietnamese negotiation. This is a genuine competitive advantage that cannot be hired away overnight.">
+  <div class="gold-label">The Service Bridge</div>
+  <h2 class="action-title">Not Servers.<br><span class="hl">Protocol Facilitators.</span></h2>
+  <p style="font-size:clamp(0.95rem,1.4vw,1.15rem);line-height:1.8;color:var(--ivory-warm);font-weight:300;max-width:700px;margin-bottom:40px;">
+    Our service team are Vietnamese elites educated in mainland China. Fluent in Sino-Vietnamese business etiquette, they act as invisible cultural translators — ensuring no nuance is lost in high-stakes negotiations.
+  </p>
+  <div style="display:flex;gap:16px;flex-wrap:wrap;">
+    <div style="border:1px solid var(--gold);padding:12px 28px;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold);font-weight:700;">Bilingual</div>
+    <div style="border:1px solid var(--gold);padding:12px 28px;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold);font-weight:700;">Etiquette-Trained</div>
+    <div style="border:1px solid var(--gold);padding:12px 28px;font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold);font-weight:700;">Discretion-Certified</div>
+  </div>
+</div>
+
+<!-- SLIDE 12 -->
+<div class="slide divider-slide" id="s12" data-notes="Shift in register. We are now speaking to the CFO in the room, not the CEO. Everything from here is numbers. The gold background is deliberate — it signals that we are now in the domain of capital, not culture.">
+  <div style="position:absolute;inset:0;background:linear-gradient(135deg,#8B6914,#C9A84C,#FFD700,#C9A84C,#8B6914);"></div>
+  <div style="position:relative;z-index:1;">
+    <div class="module-label" style="color:rgba(10,10,10,0.5);">Module 04 — The Asset</div>
+    <div class="divider-giant" style="color:var(--obsidian);">Where Capital<br>Compounds</div>
+  </div>
+</div>
+
+
+<!-- SLIDE 13 -->
+<div class="slide" id="s13" data-notes="The bar chart is the simplest possible articulation of the value proposition. $50K at a hotel disappears. $50K at Sunwah becomes $48K in industrial assets plus network access. The math is not complicated — the insight is. Let the visual speak before you explain it.">
+  <div class="gold-label">The Reframe</div>
+  <h2 class="action-title">$50,000 Spent at a Hotel Is Gone.<br>$50,000 at Sunwah <span class="hl">Works.</span></h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:flex-end;margin-top:16px;">
+    <div style="text-align:center;">
+      <div style="height:120px;background:rgba(80,80,80,0.4);border:1px solid rgba(255,255,255,0.1);display:flex;align-items:flex-end;justify-content:center;padding-bottom:16px;">
+        <span style="font-size:10px;letter-spacing:0.2em;color:rgba(255,255,255,0.3);text-transform:uppercase;">$50K consumed</span>
+      </div>
+      <div style="margin-top:16px;font-size:11px;letter-spacing:0.3em;color:rgba(255,255,255,0.3);text-transform:uppercase;">Traditional Club</div>
+    </div>
+    <div style="text-align:center;">
+      <div style="height:280px;background:linear-gradient(to top,var(--red-deep),var(--red-bright) 80%,var(--gold) 100%);border:1px solid var(--gold);display:flex;align-items:flex-end;justify-content:center;padding-bottom:16px;position:relative;">
+        <div style="position:absolute;top:16px;font-size:11px;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase;">$48K redeemable<br>+ network access</div>
+      </div>
+      <div style="margin-top:16px;font-size:11px;letter-spacing:0.3em;color:var(--gold);text-transform:uppercase;">Sunwah Founding Credit</div>
+    </div>
+  </div>
+  <p style="margin-top:28px;font-size:11px;letter-spacing:0.3em;color:var(--gold);text-transform:uppercase;text-align:center;">120 cents on every dollar. Zero sunk cost.</p>
+</div>
+
+<!-- SLIDE 14 -->
+<div class="slide" id="s14" data-notes="If Jesse Choi or a panel member pulls out a calculator, they will confirm these numbers. CBRE Hai Phong data puts standard factory rent at $4.0–5.5/sqm/month. At $4.5, 500sqm costs $2,250/month. $48,000 divided by $2,250 equals 21.3 months. Show the arithmetic — do not hide it.">
+  <div class="gold-label">The Data</div>
+  <h2 class="action-title">Your $48,000 Credit Covers<br>Your <span class="hl">First Factory Lease.</span></h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;margin-top:8px;">
+    <div>
+      <div style="margin-bottom:32px;">
+        <div style="font-size:clamp(3.5rem,7vw,6rem);font-family:'Playfair Display',serif;font-weight:700;color:var(--gold);line-height:1;" id="display-months">21.3</div>
+        <div style="font-size:11px;letter-spacing:0.4em;text-transform:uppercase;color:var(--ivory-warm);margin-top:8px;" id="display-region">Months in Hai Phong</div>
+      </div>
+      <div style="margin-bottom:16px;">
+        <label style="font-size:9px;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:8px;">Select FDI Region</label>
+        <select id="region-select-p" onchange="calcROI()" style="background:#1a1a1a;border:1px solid rgba(201,168,76,0.4);color:var(--ivory);padding:10px 16px;font-size:13px;width:100%;font-family:'Montserrat',sans-serif;outline:none;">
+          <option value="4.5,Hai Phong">海防 (Hai Phong) — $4.5/sqm</option>
+          <option value="4.0,Binh Duong">平阳 (Binh Duong) — $4.0/sqm</option>
+          <option value="6.0,HCMC Suburbs">胡志明周边 (HCMC) — $6.0/sqm</option>
+        </select>
+      </div>
+      <p style="font-size:10px;color:rgba(250,246,240,0.3);font-style:italic;line-height:1.6;">Based on CBRE &amp; Savills 2024–2025 industrial rent data. 500sqm standard factory unit.</p>
+    </div>
+    <div style="border:1px solid rgba(201,168,76,0.2);padding:32px;">
+      <div style="font-size:9px;letter-spacing:0.4em;color:var(--gold);margin-bottom:20px;text-transform:uppercase;">Credit Breakdown</div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div style="display:flex;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.05);">
+          <span style="font-size:12px;color:var(--ivory-warm);">Founding Deposit</span>
+          <span style="font-size:12px;color:var(--ivory);font-weight:600;">$50,000</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.05);">
+          <span style="font-size:12px;color:var(--ivory-warm);">Non-refundable Entry</span>
+          <span style="font-size:12px;color:rgba(196,30,58,0.8);">— $10,000</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.05);">
+          <span style="font-size:12px;color:var(--ivory-warm);">Convertible Credit</span>
+          <span style="font-size:12px;color:var(--ivory);">$40,000</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;">
+          <span style="font-size:12px;color:var(--gold);font-weight:600;">Effective Value (120%)</span>
+          <span style="font-size:12px;color:var(--gold);font-weight:700;">$48,000</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 15 -->
+<div class="slide" id="s15" data-notes="This slide answers the question every panel will ask: 'What if the club never turns a profit?' The answer is: it doesn't need to. One $30M industrial deal generates $150–300K in advisory fees — enough to fund the club's net operating deficit for two years. The club is a customer acquisition cost, not a P&L.">
+  <div class="gold-label">The Ecosystem</div>
+  <h2 class="action-title">The Club Doesn't Need to Profit.<br><span class="hl">The Group Already Does.</span></h2>
+  <ul class="bullets" style="margin-bottom:36px;">
+    <li>F&amp;B operates at breakeven — overhead funded as Industrial Park customer acquisition cost.</li>
+    <li>One facilitated $30M FDI deal generates fees that fund <strong>10 years</strong> of club operations.</li>
+    <li>Hub-and-Spoke: Flagship HCMC → Elite Bistros in Haiphong &amp; Hanoi.</li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:0;flex-wrap:wrap;">
+    <div style="border:1px solid var(--gold);padding:14px 24px;font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);text-align:center;">Club<br><span style="font-size:9px;opacity:0.6;">Deal Origination</span></div>
+    <div style="color:var(--red-bright);font-size:1.5rem;padding:0 12px;">→</div>
+    <div style="border:1px solid rgba(201,168,76,0.4);padding:14px 24px;font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--ivory-warm);text-align:center;">M&amp;A Deal<br><span style="font-size:9px;opacity:0.6;">$30M+ Transaction</span></div>
+    <div style="color:var(--red-bright);font-size:1.5rem;padding:0 12px;">→</div>
+    <div style="border:1px solid rgba(201,168,76,0.4);padding:14px 24px;font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--ivory-warm);text-align:center;">Industrial Park<br><span style="font-size:9px;opacity:0.6;">Tenant Secured</span></div>
+    <div style="color:var(--red-bright);font-size:1.5rem;padding:0 12px;">→</div>
+    <div style="border:1px solid var(--gold);padding:14px 24px;font-size:11px;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);text-align:center;">Group Revenue<br><span style="font-size:9px;opacity:0.6;">Advisory + Rent</span></div>
+  </div>
+</div>
+
+<!-- SLIDE 16 -->
+<div class="slide" id="s16" data-notes="Demonstrate legal fluency. Cite Decree 132/2020 by name. Mention VILAF as the white-label partner. Say 'transfer pricing benchmarking study' — these three phrases signal to any legally-trained panel member that this team has done the compliance work, not just the concept work.">
+  <div class="gold-label">Module 05 — The Shield</div>
+  <h2 class="action-title">Risk Mitigation &amp;<br><span class="hl">Legal Architecture</span></h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:8px;">
+    <div style="border:1px solid rgba(201,168,76,0.3);padding:28px;">
+      <div style="font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;">Entity Separation</div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div style="background:rgba(201,168,76,0.06);border-left:3px solid var(--gold);padding:12px 16px;">
+          <div style="font-size:11px;font-weight:600;color:var(--ivory);margin-bottom:4px;">Sunwah House Hospitality</div>
+          <div style="font-size:11px;color:var(--ivory-warm);opacity:0.7;">F&amp;B operations — clean entity, no advisory exposure</div>
+        </div>
+        <div style="background:rgba(196,30,58,0.06);border-left:3px solid var(--red-bright);padding:12px 16px;">
+          <div style="font-size:11px;font-weight:600;color:var(--ivory);margin-bottom:4px;">Sunwah Strategic Advisory</div>
+          <div style="font-size:11px;color:var(--ivory-warm);opacity:0.7;">M&amp;A fees via VILAF white-label alliance — fully licensed</div>
+        </div>
+      </div>
+    </div>
+    <div style="border:1px solid rgba(201,168,76,0.3);padding:28px;">
+      <div style="font-size:10px;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;">Transfer Pricing Shield</div>
+      <ul class="bullets" style="font-size:0.85rem;">
+        <li>Decree 132/2020 compliant — arm's length documentation prepared</li>
+        <li>TP benchmarking study commissioned (PwC Vietnam) — $15–25K</li>
+        <li>Formal intercompany agreement between F&amp;B and Industrial Park entities</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 17 -->
+<div class="slide" id="s17" data-notes="Close with scarcity. 15 of 50 seats are in final confirmation. The Q3 2026 window is real — Sunwah Tower's penthouse fit-out timeline constrains the launch date. This is not manufactured urgency. The founding cohort closes when it closes.">
+  <div class="gold-label">The Urgency</div>
+  <h2 class="action-title">50 Seats. 15 Already at Final Stage.<br><span class="hl">Q3 Window Closes.</span></h2>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;margin-top:8px;">
+    <div>
+      <ul class="bullets">
+        <li>Founding Partner status: invitation-only, referral-confirmed.</li>
+        <li>$50,000 Founding Credit — structured as convertible asset, not membership fee.</li>
+        <li>Q3 2026 cohort confirmation deadline — fit-out timeline is fixed.</li>
+      </ul>
+    </div>
+    <div>
+      <div style="font-size:9px;letter-spacing:0.4em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;">Founding Circle — Seat Availability</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;" id="seats-grid"></div>
+      <div style="margin-top:16px;display:flex;gap:24px;">
+        <div style="display:flex;align-items:center;gap:8px;font-size:10px;color:var(--ivory-warm);">
+          <div style="width:12px;height:12px;background:var(--red-bright);border-radius:50%;"></div>Confirmed (15)
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:10px;color:var(--ivory-warm);">
+          <div style="width:12px;height:12px;border:1px solid rgba(255,255,255,0.2);border-radius:50%;"></div>Available (35)
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 18 -->
+<div class="slide" id="s18" data-notes="End in silence. Read the closing line once. Then say: 'We are not asking you to join a club. We are inviting you into the room where Vietnam's next industrial chapter will be written. The question is whether you want to be in that room.' Stop talking. Do not add anything.">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 60%,rgba(139,26,26,0.3) 0%,var(--obsidian) 70%);pointer-events:none;"></div>
+  <div style="position:relative;z-index:1;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;">
+    <div class="guilloche" style="width:200px;margin-bottom:48px;"></div>
+    <blockquote style="font-family:'Playfair Display',serif;font-size:clamp(1.6rem,3vw,2.8rem);font-style:italic;line-height:1.5;color:var(--ivory);max-width:800px;margin-bottom:48px;">
+      "Join the room where the future of Southeast Asia is written."
+    </blockquote>
+    <div class="guilloche" style="width:200px;margin-bottom:40px;"></div>
+    <p style="font-size:11px;letter-spacing:0.3em;color:var(--gold);text-transform:uppercase;margin-bottom:12px;">Sunwah Tower, 33/F, 115 Nguyen Hue Boulevard, District 1, Ho Chi Minh City</p>
+    <p style="font-size:11px;letter-spacing:0.2em;color:rgba(201,168,76,0.6);margin-bottom:40px;">founders@sunwahhouse.com</p>
+    <button onclick="goToSlide(0)" style="border:1px solid rgba(201,168,76,0.3);background:transparent;color:rgba(201,168,76,0.5);padding:10px 28px;font-size:9px;letter-spacing:0.4em;text-transform:uppercase;cursor:pointer;font-family:'Montserrat',sans-serif;transition:all 0.3s;" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='rgba(201,168,76,0.3)';this.style.color='rgba(201,168,76,0.5)'">↑ Return to Start</button>
+    <p style="position:absolute;bottom:28px;font-size:9px;letter-spacing:0.4em;color:rgba(255,255,255,0.15);text-transform:uppercase;">Sunwah Group &nbsp;•&nbsp; MiM Capstone 2025–26 &nbsp;•&nbsp; Team 11</p>
+  </div>
+</div>
+
+</div><!-- end slides-container -->
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const counter = document.getElementById('slide-counter');
+const progressBar = document.getElementById('progress-bar');
+const notesPanel = document.getElementById('notes-panel');
+const notesText = document.getElementById('notes-text');
+let current = 0;
+let notesVisible = false;
+
+function goToSlide(n) {
+  slides[current].classList.remove('active');
+  slides[current].classList.add('exit');
+  setTimeout(() => slides[current < n ? current : current].classList.remove('exit'), 600);
+  const prev = current;
+  current = Math.max(0, Math.min(n, slides.length - 1));
+  slides[prev].classList.remove('active');
+  setTimeout(() => slides[prev].classList.remove('exit'), 600);
+  slides[current].classList.add('active');
+  const num = String(current + 1).padStart(2, '0');
+  const tot = String(slides.length).padStart(2, '0');
+  counter.textContent = `${num} / ${tot}`;
+  progressBar.style.width = `${((current + 1) / slides.length) * 100}%`;
+  if (notesVisible) updateNotes();
+}
+
+function nextSlide() { goToSlide(current + 1); }
+function prevSlide() { goToSlide(current - 1); }
+
+function toggleNotes() {
+  notesVisible = !notesVisible;
+  notesPanel.classList.toggle('visible', notesVisible);
+  if (notesVisible) updateNotes();
+}
+
+function updateNotes() {
+  const note = slides[current].dataset.notes || '';
+  notesText.textContent = note;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') nextSlide();
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') prevSlide();
+  if (e.key === 'n' || e.key === 'N') toggleNotes();
+});
+
+// Swipe support
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  if (Math.abs(dx) > 50) dx < 0 ? nextSlide() : prevSlide();
+});
+
+// Seat grid for slide 17
+function buildSeats() {
+  const grid = document.getElementById('seats-grid');
+  if (!grid) return;
+  for (let i = 0; i < 50; i++) {
+    const dot = document.createElement('div');
+    dot.style.cssText = `width:16px;height:16px;border-radius:50%;${i < 15 ? 'background:var(--red-bright)' : 'border:1px solid rgba(255,255,255,0.2)'};`;
+    grid.appendChild(dot);
+  }
+}
+buildSeats();
+
+// ROI calculator for slide 14
+function calcROI() {
+  const sel = document.getElementById('region-select-p');
+  if (!sel) return;
+  const [rent, region] = sel.value.split(',');
+  const months = (48000 / (parseFloat(rent) * 500)).toFixed(1);
+  document.getElementById('display-months').textContent = months;
+  document.getElementById('display-region').textContent = `Months in ${region}`;
+}
+
+// Init
+progressBar.style.width = `${(1 / slides.length) * 100}%`;
+</script>
+</body>
+</html>
